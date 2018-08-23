@@ -1,0 +1,32 @@
+{
+  "name": "your-service-name",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node src/index.js",
+    "watch": "nodemon src/index.js",
+    "lint": "eslint .",
+    "linter-fix": "eslint --fix .",
+    "healthcheck": "node src/modules/healthcheck.js",
+    "test": "mocha src/tests --exit",
+    "test:coverage": "nyc -x src/tests mocha src/tests --exit",
+    "test:auto-watch": "mocha src/tests --watch"
+  },
+  "dependencies": {
+    "express": "^4.16.3",
+    "prom-client": "^11.0.0"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
+    "chai-http": "^3.0.0",
+    "nodemon": "^1.14.11",
+    "eslint": "^4.19.1",
+    "eslint-config-strongloop": "^2.1.0",
+    "mocha": "^5.0.0",
+    "mocha-junit-reporter": "^1.17.0",
+    "rewire": "^4.0.1",
+    "sinon": "^4.5.0",
+    "nyc": "^12.0.2"
+  }
+}

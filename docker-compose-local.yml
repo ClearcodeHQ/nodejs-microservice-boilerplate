@@ -1,0 +1,65 @@
+version: '3'
+
+services:
+    your-service-name:
+        container_name: ${PROJECT}.your.service.name
+        image: your.dockerhub.com/${PROJECT}-your-service-name:dev-${TAG}
+        build:
+            context: .
+            dockerfile: ./Dockerfile
+        restart: ${SERVICES_RESTART_TYPE}
+        env_file:
+            - .env
+        command: npm run watch
+        ports:
+            - 8030:3000
+        volumes:
+            - .:/code
+            - /code/node_modules
+
+    rabbitmq:
+        container_name: ${PROJECT}.your.service.name.rabbitmq
+        image: rabbitmq:3.7-management-alpine
+        restart: ${SERVICES_RESTART_TYPE}
+        environment:
+            - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
+            - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASS}
+        ports:
+            - '${RABBITMQ_PORT}:5672'
+            - '${RABBITMQ_MGM_PORT}:15672'
+
+    postgresql:
+        image: postgres:9.6-alpine
+        container_name: ${PROJECT}.your.service.name.postgresql
+        restart: ${SERVICES_RESTART_TYPE}
+        environment:
+            - POSTGRES_USER=${PGSQL_DB_USER}
+            - POSTGRES_PASSWORD=${PGSQL_DB_PASSWORD}
+            - POSTGRES_DB=${PGSQL_DB_NAME}
+        volumes:
+            - pgdata:/var/lib/postgresql
+
+    elasticsearch:
+        container_name: ${PROJECT}.your.service.name.elasticsearch
+        image: elasticsearch:5.6.4-alpine
+        environment:
+            - "xpack.security.enabled=false"
+            - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+        ports:
+            - '${ELASTIC_PORT}:9200'
+            - '${ELASTIC_PORT_SEC}:9300'
+
+    kibana:
+        container_name: ${PROJECT}.your.service.name.kibana
+        image: kibana:5
+        depends_on:
+            - elasticsearch
+        environment:
+            - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+            - "ELASTICSEARCH_URL=http://elasticsearch:9200"
+        ports:
+            - '${KIBANA_PORT}:5601'
+
+volumes:
+    pgdata:
+

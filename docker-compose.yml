@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+    your-service-name:
+        container_name: ${PROJECT_STACK}.your.service.name
+        image: your.dockerhub.com/${PROJECT}-your-service-name:dev-${TAG}
+        build:
+            context: .
+            dockerfile: ./Dockerfile               
+        env_file:
+            - .env
+        networks:
+            - project_dev
+        volumes:
+            - .:/code
+            - /code/node_modules
+        command: npm run watch
+        labels:
+            - "treafik.enable=true"
+            - "traefik.backend=your-service-name"
+            - "traefik.port=3000"
+            - "traefik.frontend.rule=HostRegexp:{subdomain:your-service-name.+}"
+
+networks:
+    project_dev:
+        external:
+            name: project_dev
+

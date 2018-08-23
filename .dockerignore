@@ -1,0 +1,11 @@
+node_modules
+.gitignore
+.git
+.idea
+Dockerfile
+Dockerfile.test
+.dockerignore
+docker-compose.yml
+docker-compose-local.yml
+Makefile
+.nyc_output
