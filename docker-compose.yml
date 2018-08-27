@@ -16,7 +16,7 @@ services:
             - /code/node_modules
         command: npm run watch
         labels:
-            - "treafik.enable=true"
+            - "traefik.enable=true"
             - "traefik.backend=your-service-name"
             - "traefik.port=3000"
             - "traefik.frontend.rule=HostRegexp:{subdomain:your-service-name.+}"
