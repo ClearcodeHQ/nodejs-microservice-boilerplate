@@ -45,6 +45,12 @@ Configuration file `.eslintrc.json` is included, as well as the [eslint](https:/
 
 The Makefile gives more convenient access to most frequently performed actions, such as rebuilding or starting the service, showing logs or logging into the container. It is based on the `docker-compose-local.yml` file, so all external dependencies will be run as well.
 
+You will also be able to run tests in a docker container, as they would be in a pipeline. The results will be available in the `pipieline` directory.
+
+### Pipelines (for bitbucket)
+
+The original project was hosted internally on bitbucket, so we have created a pipeline file for it. You may find it useful if your setup is also based there, or it may serve you as an example of CD setup.
+
 ## What to do
 
 Fill in .env based on .env.dist

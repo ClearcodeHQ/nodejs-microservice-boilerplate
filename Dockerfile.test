@@ -1,0 +1,9 @@
+FROM sutimage:latest
+ENV APP_DIR /code
+WORKDIR $APP_DIR
+
+RUN npm config set unsafe-perm true
+RUN npm -g install mocha
+RUN npm -g install mocha-junit-reporter
+
+CMD ["npm", "run", "test:pipeline"]

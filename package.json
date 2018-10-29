@@ -10,7 +10,8 @@
     "healthcheck": "node src/modules/healthcheck.js",
     "test": "mocha src/tests --exit",
     "test:coverage": "nyc -x src/tests mocha src/tests --exit",
-    "test:auto-watch": "mocha src/tests --watch"
+    "test:auto-watch": "mocha src/tests --watch",
+    "test:pipeline": "mocha src//tests --reporter mocha-junit-reporter --reporter-options mochaFile=/pipeline/test-results/mocharesults.xml --exit"
   },
   "dependencies": {
     "express": "^4.16.3",
