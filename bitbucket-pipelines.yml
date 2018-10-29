@@ -1,0 +1,38 @@
+# enable Docker for your repository
+
+options:
+  docker: true
+
+pipelines:
+  default:
+    - step:
+        name: "Build service image and push to registry"
+        max-time: 8
+        script:
+          - echo "DOCKER_REGISTRY"=$DOCKER_REGISTRY
+          - echo "BITBUCKET_REPO_SLUG"=$BITBUCKET_REPO_SLUG
+          - echo "BITBUCKET_COMMIT"=$BITBUCKET_COMMIT
+          - BITBUCKET_BRANCH=$(echo ${BITBUCKET_BRANCH:-$BITBUCKET_COMMIT} | sed 's/\//\-/')
+          - echo "BITBUCKET_BRANCH"=$BITBUCKET_BRANCH
+
+          - APP_VERSION=$(echo $BITBUCKET_COMMIT | cut -c1-6); echo "APP_VERSION"=$APP_VERSION
+          - docker build . -t $BITBUCKET_REPO_SLUG:$BITBUCKET_COMMIT --build-arg COMMIT_SHA=$BITBUCKET_COMMIT
+
+          # testing
+          - docker tag $BITBUCKET_REPO_SLUG:$BITBUCKET_COMMIT sutimage:latest
+          - docker build . --file Dockerfile.test -t suttestimage:latest
+          - docker run --rm -v $PWD:/pipeline suttestimage:latest
+
+          - docker login -u $REG_USER_NAME -p $REG_USER_PASS $DOCKER_REGISTRY
+          - docker tag $BITBUCKET_REPO_SLUG:$BITBUCKET_COMMIT $DOCKER_REGISTRY/$BITBUCKET_REPO_SLUG:$BITBUCKET_COMMIT
+          - docker push $DOCKER_REGISTRY/$BITBUCKET_REPO_SLUG:$BITBUCKET_COMMIT
+          - docker tag $BITBUCKET_REPO_SLUG:$BITBUCKET_COMMIT $DOCKER_REGISTRY/$BITBUCKET_REPO_SLUG:$BITBUCKET_BRANCH
+          - docker push $DOCKER_REGISTRY/$BITBUCKET_REPO_SLUG:$BITBUCKET_BRANCH
+
+          # Sets image tag to latest if branch is master
+          - if [ $BITBUCKET_BRANCH == "master" ]; then
+          - docker tag $BITBUCKET_REPO_SLUG:$BITBUCKET_COMMIT $DOCKER_REGISTRY/$BITBUCKET_REPO_SLUG:latest
+          - docker push $DOCKER_REGISTRY/$BITBUCKET_REPO_SLUG:latest
+          - fi
+
+          - echo "Full image name $DOCKER_REGISTRY/$BITBUCKET_REPO_SLUG:$BITBUCKET_COMMIT"

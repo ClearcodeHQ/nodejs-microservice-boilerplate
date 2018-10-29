@@ -14,7 +14,7 @@ DOCKER_EXEC_INTER = docker exec -it
 
 SERVICE_ID = $$(docker ps | grep $(PROJECT).your-service-name | cut -c 1-12)
 
-CURRENT_DIR := $(notdir $(shell pwd))
+CURRENT_DIR := $(shell pwd)
 
 .PHONY: help
 
@@ -60,6 +60,12 @@ logs:
 ## Run TESTS
 tests:
 		${DOCKER_EXEC_INTER} ${SERVICE_ID} npm run test
+
+## Run TESTS IN DOCKER (uses the same logic as the pipeline setup)
+tests-in-docker:
+		docker build . -t sutimage:latest --build-arg COMMIT_SHA=test-build
+		docker build . --file Dockerfile.test -t suttestimage:latest
+		docker run --rm -v ${CURRENT_DIR}/pipeline:/pipeline suttestimage:latest
 
 ## Show HELP
 help:
