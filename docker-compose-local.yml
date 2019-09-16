@@ -3,7 +3,7 @@ version: '3'
 services:
     your-service-name:
         container_name: ${PROJECT}.your.service.name
-        image: your.dockerhub.com/${PROJECT}-your-service-name:dev-${TAG}
+        image: ${PROJECT}-your-service-name:dev-${TAG}
         build:
             context: .
             dockerfile: ./Dockerfile
@@ -47,7 +47,7 @@ services:
             - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
         ports:
             - '${ELASTIC_PORT}:9200'
-            - '${ELASTIC_PORT_SEC}:9300'
+            - '${ELASTIC_PORT_SECOND}:9300'
 
     kibana:
         container_name: ${PROJECT}.your.service.name.kibana

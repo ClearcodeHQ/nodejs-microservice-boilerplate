@@ -8,8 +8,12 @@ const assert = require('chai').assert;
 
 const sinon = require('sinon');
 
+const config = require('./../config/default');
+config.server.port = 9876;
+
 const rewire = require('rewire');
 const healthcheck = rewire('./../modules/healthcheck.js');
+healthcheck.__set__('config', config);
 
 const heartbeatCounterSpy = sinon.spy();
 healthcheck.__set__('serviceHeartbeatCounter', { inc: heartbeatCounterSpy });
