@@ -17,7 +17,7 @@ const serviceHeartbeatCounter = new Counter({
 });
 
 const updateServiceStatus = () => {
-  serviceHeartbeatCounter.inc({hostname});
+  serviceHeartbeatCounter.inc({alive: hostname});
 };
 
 const serviceVersion = new Counter({
@@ -34,7 +34,7 @@ const serviceCommitSha = new Counter({
   labelNames: ['commit_sha'],
 });
 
-serviceCommitSha.inc({sha});
+serviceCommitSha.inc({commit_sha: sha});
 
 server.get('/', (req, res) => {
   res.status(200);
