@@ -14,7 +14,7 @@
     "test:pipeline": "mocha src/tests/* --reporter mocha-junit-reporter --reporter-options mochaFile=/pipeline/test-results/mocharesults.xml --exit"
   },
   "dependencies": {
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "prom-client": "^11.5.3"
   },
   "devDependencies": {
